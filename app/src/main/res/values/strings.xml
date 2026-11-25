@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">A.R Chat</string>
+    <string name="tab_chats">Chats</string>
+    <string name="tab_updates">Updates</string>
+    <string name="tab_communities">Communities</string>
+    <string name="tab_calls">Calls</string>
+    <string name="search_placeholder">Ask or Search A.R Chat</string>
+    <string name="filter_all">All</string>
+    <string name="filter_unread">Unread</string>
+    <string name="filter_favorites">Favorites</string>
+    <string name="filter_groups">Groups</string>
+    <string name="archived_chats">Archived</string>
+    <string name="e2ee_banner">End-to-end encrypted (ECDH P-256 + AES-256-GCM)</string>
+    <string name="welcome_title">Welcome to A.R Chat</string>
+    <string name="welcome_subtitle">Private, fast, Pakistan-ready messaging with hardware-backed security.</string>
+    <string name="sign_in_google">Sign in with Google</string>
+    <string name="app_locked_title">A.R Chat is Locked</string>
+    <string name="app_locked_subtitle">Verify your identity to unlock your private chats</string>
+    <string name="owner_portal_title">Owner Administration Portal</string>
+</resources>

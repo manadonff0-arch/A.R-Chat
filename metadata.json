@@ -1,0 +1,6 @@
+{
+  "name": "A.R Chat",
+  "description": "Real-time communication app with encrypted messaging, status updates, communities, biometric app lock, and private owner administration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">A.R Chat</string>
+    <string name="tab_chats">چیٹس</string>
+    <string name="tab_updates">اپڈیٹس</string>
+    <string name="tab_communities">کمیونٹیز</string>
+    <string name="tab_calls">کالز</string>
+    <string name="search_placeholder">تلاش کریں</string>
+    <string name="filter_all">سب</string>
+    <string name="filter_unread">نہ پڑھے گئے</string>
+    <string name="filter_favorites">پسندیدہ</string>
+    <string name="filter_groups">گروپس</string>
+    <string name="archived_chats">آرکائیو شدہ</string>
+    <string name="e2ee_banner">اینڈ ٹو اینڈ انکرپٹڈ (ECDH P-256 + AES-256-GCM)</string>
+    <string name="welcome_title">A.R Chat میں خوش آمدید</string>
+    <string name="welcome_subtitle">محفوظ، تیز اور پاکستان کے لیے تیار پیغام رسانی۔</string>
+    <string name="sign_in_google">گوگل کے ساتھ سائن ان کریں</string>
+    <string name="app_locked_title">A.R Chat لاک ہے</string>
+    <string name="app_locked_subtitle">اپنی چیٹس کھولنے کے لیے تصدیق کریں</string>
+    <string name="owner_portal_title">اونر ایڈمنسٹریشن پورٹل</string>
+</resources>

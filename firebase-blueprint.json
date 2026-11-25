@@ -1,0 +1,365 @@
+{
+  "entities": {
+    "PublicProfile": {
+      "title": "PublicProfile",
+      "description": "Publicly discoverable A.R Chat profile and E2EE public keys without PII",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID" },
+        "displayName": { "type": "string", "description": "User display name" },
+        "username": { "type": "string", "description": "Unique lowercase handle" },
+        "about": { "type": "string", "description": "User status bio" },
+        "mood": { "type": "string", "description": "Current mood label" },
+        "carrierName": { "type": "string", "description": "Pakistani mobile carrier label (Jazz, Zong, Ufone, Telenor)" },
+        "avatarData": { "type": "string", "description": "Optional base64 avatar thumbnail or preset key" },
+        "online": { "type": "boolean", "description": "Current online flag" },
+        "privacyLastSeen": { "type": "string", "enum": ["everyone", "contacts", "nobody"] },
+        "privacyPhoto": { "type": "string", "enum": ["everyone", "contacts", "nobody"] },
+        "privacyAbout": { "type": "string", "enum": ["everyone", "contacts", "nobody"] },
+        "readReceiptsEnabled": { "type": "boolean" },
+        "ecdhPublicKey": { "type": "string", "description": "Base64 X.509 EC P-256 public key for E2EE" },
+        "keyFingerprint": { "type": "string", "description": "SHA-256 fingerprint of identity public key" },
+        "accountStatus": { "type": "string", "enum": ["active", "suspended"] },
+        "lastSeenAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "displayName", "username", "accountStatus", "createdAt", "updatedAt"]
+    },
+    "UserPrivate": {
+      "title": "UserPrivate",
+      "description": "Private PII and personal preferences isolated per user",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "countryCode": { "type": "string" },
+        "carrierName": { "type": "string" },
+        "phoneVerifiedStatus": { "type": "string" },
+        "email": { "type": "string" },
+        "emailVerified": { "type": "boolean" },
+        "displayName": { "type": "string" },
+        "username": { "type": "string" },
+        "accountStatus": { "type": "string", "enum": ["active", "suspended"] },
+        "disappearingDefaultSeconds": { "type": "integer" },
+        "languageCode": { "type": "string", "enum": ["en", "ur"] },
+        "themeMode": { "type": "string", "enum": ["dark", "light", "system"] },
+        "twoFactorEnabled": { "type": "boolean" },
+        "archivedChatIds": { "type": "array" },
+        "pinnedChatIds": { "type": "array" },
+        "mutedChatIds": { "type": "array" },
+        "favoriteChatIds": { "type": "array" },
+        "blockedUserIds": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "phoneNumber", "countryCode", "displayName", "username", "accountStatus", "createdAt", "updatedAt"]
+    },
+    "LinkedDevice": {
+      "title": "LinkedDevice",
+      "description": "Authorized device session linked to user account",
+      "type": "object",
+      "properties": {
+        "deviceName": { "type": "string" },
+        "platform": { "type": "string" },
+        "sessionHash": { "type": "string" },
+        "active": { "type": "boolean" },
+        "lastActiveAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["deviceName", "platform", "active", "createdAt"]
+    },
+    "EncryptedBackup": {
+      "title": "EncryptedBackup",
+      "description": "Client-side PBKDF2 + AES-256-GCM encrypted backup snapshot",
+      "type": "object",
+      "properties": {
+        "label": { "type": "string" },
+        "ciphertextBase64": { "type": "string" },
+        "ivBase64": { "type": "string" },
+        "saltBase64": { "type": "string" },
+        "kdfIterations": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["label", "ciphertextBase64", "ivBase64", "saltBase64", "kdfIterations", "createdAt"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "Direct, group, or broadcast conversation metadata",
+      "type": "object",
+      "properties": {
+        "chatType": { "type": "string", "enum": ["direct", "group", "broadcast"] },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "memberUids": { "type": "array" },
+        "adminUids": { "type": "array" },
+        "lastMessagePreview": { "type": "string" },
+        "lastMessageSenderUid": { "type": "string" },
+        "lastMessageType": { "type": "string" },
+        "lastMessageEncrypted": { "type": "boolean" },
+        "pinnedMessageId": { "type": "string" },
+        "disappearingSeconds": { "type": "integer" },
+        "inviteCode": { "type": "string" },
+        "lastMessageAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["chatType", "title", "ownerUid", "memberUids", "adminUids", "createdAt", "updatedAt"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Message inside a chat with E2EE payload and denormalized memberUids",
+      "type": "object",
+      "properties": {
+        "chatId": { "type": "string" },
+        "senderUid": { "type": "string" },
+        "senderName": { "type": "string" },
+        "memberUids": { "type": "array" },
+        "messageType": { "type": "string", "enum": ["text", "image", "voice", "document", "location", "contact", "sticker", "system"] },
+        "encrypted": { "type": "boolean" },
+        "ciphertextBase64": { "type": "string" },
+        "ivBase64": { "type": "string" },
+        "senderKeyFingerprint": { "type": "string" },
+        "plaintextFallback": { "type": "string" },
+        "attachmentMeta": { "type": "string" },
+        "attachmentDataBase64": { "type": "string" },
+        "replyToMessageId": { "type": "string" },
+        "replyToPreview": { "type": "string" },
+        "forwarded": { "type": "boolean" },
+        "deliveryStatus": { "type": "string", "enum": ["sent", "delivered", "read"] },
+        "starredByUids": { "type": "array" },
+        "edited": { "type": "boolean" },
+        "deletedForAll": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["chatId", "senderUid", "senderName", "memberUids", "messageType", "encrypted", "deliveryStatus", "createdAt", "updatedAt"]
+    },
+    "StatusUpdate": {
+      "title": "StatusUpdate",
+      "description": "24-hour expiring status update",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "statusType": { "type": "string", "enum": ["text", "photo", "voice", "link"] },
+        "textContent": { "type": "string" },
+        "backgroundHex": { "type": "string" },
+        "mediaDataBase64": { "type": "string" },
+        "privacyMode": { "type": "string", "enum": ["contacts", "except", "only"] },
+        "allowedViewerUids": { "type": "array" },
+        "viewerUids": { "type": "array" },
+        "expiresAtMillis": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerUid", "ownerName", "statusType", "privacyMode", "expiresAtMillis", "createdAt", "updatedAt"]
+    },
+    "Channel": {
+      "title": "Channel",
+      "description": "Public broadcast channel",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "followerUids": { "type": "array" },
+        "followerCount": { "type": "integer" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerUid", "name", "followerCount", "active", "createdAt", "updatedAt"]
+    },
+    "ChannelPost": {
+      "title": "ChannelPost",
+      "description": "Post published in a channel",
+      "type": "object",
+      "properties": {
+        "channelId": { "type": "string" },
+        "authorUid": { "type": "string" },
+        "postType": { "type": "string", "enum": ["text", "photo", "video", "link"] },
+        "content": { "type": "string" },
+        "reactionsCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["channelId", "authorUid", "postType", "content", "createdAt", "updatedAt"]
+    },
+    "Community": {
+      "title": "Community",
+      "description": "Community grouping multiple chats and announcement channel",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "memberUids": { "type": "array" },
+        "adminUids": { "type": "array" },
+        "linkedChatIds": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerUid", "name", "memberUids", "adminUids", "createdAt", "updatedAt"]
+    },
+    "CallSession": {
+      "title": "CallSession",
+      "description": "WebRTC signaling & call log session",
+      "type": "object",
+      "properties": {
+        "callerUid": { "type": "string" },
+        "callerName": { "type": "string" },
+        "calleeUid": { "type": "string" },
+        "calleeName": { "type": "string" },
+        "participantUids": { "type": "array" },
+        "callType": { "type": "string", "enum": ["voice", "video", "group_voice", "group_video"] },
+        "callState": { "type": "string", "enum": ["ringing", "connected", "ended", "declined", "missed"] },
+        "offerSdp": { "type": "string" },
+        "answerSdp": { "type": "string" },
+        "durationSeconds": { "type": "integer" },
+        "networkQuality": { "type": "string", "enum": ["good", "fair", "poor"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["callerUid", "callerName", "calleeUid", "calleeName", "participantUids", "callType", "callState", "createdAt", "updatedAt"]
+    },
+    "ReportTicket": {
+      "title": "ReportTicket",
+      "description": "Abuse report or support request reviewed by Owner/Admins",
+      "type": "object",
+      "properties": {
+        "reporterUid": { "type": "string" },
+        "targetType": { "type": "string", "enum": ["user", "channel", "group", "support"] },
+        "targetId": { "type": "string" },
+        "reason": { "type": "string" },
+        "status": { "type": "string", "enum": ["open", "resolved", "dismissed"] },
+        "resolutionNote": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["reporterUid", "targetType", "targetId", "reason", "status", "createdAt", "updatedAt"]
+    },
+    "AdminMember": {
+      "title": "AdminMember",
+      "description": "Authorized administrator or owner entry",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["OWNER", "ADMIN"] },
+        "addedByUid": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "addedByUid", "createdAt"]
+    },
+    "AppPublicConfig": {
+      "title": "AppPublicConfig",
+      "description": "Global maintenance and release metadata",
+      "type": "object",
+      "properties": {
+        "maintenanceMode": { "type": "boolean" },
+        "maintenanceMessage": { "type": "string" },
+        "latestVersion": { "type": "string" },
+        "globalAnnouncement": { "type": "string" },
+        "updatedByUid": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["maintenanceMode", "latestVersion", "updatedByUid", "updatedAt"]
+    },
+    "OwnerSecurityConfig": {
+      "title": "OwnerSecurityConfig",
+      "description": "Server-protected owner verification credentials (salted PBKDF2 hash)",
+      "type": "object",
+      "properties": {
+        "ownerEmail": { "type": "string" },
+        "ownerPhoneNumber": { "type": "string" },
+        "pinHash": { "type": "string" },
+        "pinSalt": { "type": "string" },
+        "twoFactorEnabled": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerEmail", "ownerPhoneNumber", "pinHash", "pinSalt", "twoFactorEnabled", "updatedAt"]
+    },
+    "AdminAuditLog": {
+      "title": "AdminAuditLog",
+      "description": "Immutable audit log of owner/admin actions",
+      "type": "object",
+      "properties": {
+        "actorUid": { "type": "string" },
+        "actorEmail": { "type": "string" },
+        "action": { "type": "string" },
+        "targetId": { "type": "string" },
+        "details": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["actorUid", "actorEmail", "action", "targetId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/public_profiles/{userId}": {
+      "schema": { "$ref": "#/entities/PublicProfile" },
+      "description": "Publicly discoverable profile & ECDH public keys"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserPrivate" },
+      "description": "Private PII, Pakistani phone number, and user settings"
+    },
+    "/users/{userId}/linked_devices/{deviceId}": {
+      "schema": { "$ref": "#/entities/LinkedDevice" },
+      "description": "Linked devices per user"
+    },
+    "/users/{userId}/backups/{backupId}": {
+      "schema": { "$ref": "#/entities/EncryptedBackup" },
+      "description": "Client-encrypted backup snapshots"
+    },
+    "/chats/{chatId}": {
+      "schema": { "$ref": "#/entities/Chat" },
+      "description": "Direct, group, and broadcast conversations"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ChatMessage" },
+      "description": "Messages within a chat"
+    },
+    "/statuses/{statusId}": {
+      "schema": { "$ref": "#/entities/StatusUpdate" },
+      "description": "24-hour expiring status updates"
+    },
+    "/channels/{channelId}": {
+      "schema": { "$ref": "#/entities/Channel" },
+      "description": "Public channels"
+    },
+    "/channels/{channelId}/posts/{postId}": {
+      "schema": { "$ref": "#/entities/ChannelPost" },
+      "description": "Posts inside a channel"
+    },
+    "/communities/{communityId}": {
+      "schema": { "$ref": "#/entities/Community" },
+      "description": "Communities grouping multiple chats"
+    },
+    "/calls/{callId}": {
+      "schema": { "$ref": "#/entities/CallSession" },
+      "description": "Voice & video call signaling and call logs"
+    },
+    "/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/ReportTicket" },
+      "description": "Abuse reports and support requests"
+    },
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminMember" },
+      "description": "Authorized admin/owner registry"
+    },
+    "/app_config/public_status": {
+      "schema": { "$ref": "#/entities/AppPublicConfig" },
+      "description": "App-wide maintenance mode and release info"
+    },
+    "/app_config/owner_security": {
+      "schema": { "$ref": "#/entities/OwnerSecurityConfig" },
+      "description": "Owner-only security config"
+    },
+    "/admin_logs/{logId}": {
+      "schema": { "$ref": "#/entities/AdminAuditLog" },
+      "description": "Owner/Admin action audit log"
+    }
+  }
+}
